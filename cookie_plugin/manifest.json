@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "SteamedBun",
+  "version": "1.0.0",
+  "description": "浏览器Cookie展示插件（虾仁版）",
+  "permissions": [
+    "cookies",
+    "tabs",
+    "activeTab"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}
