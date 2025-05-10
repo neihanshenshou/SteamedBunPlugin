@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TC Viewer</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+
+<h2>Token</h2>
+
+<!-- 在你的HTML中 -->
+<div id="toast"
+     style="display:none; position:fixed; top:10px; left:50%; transform:translateX(-50%); background:rgba(0, 0, 0, 0.7); color:white; padding:10px; border-radius:5px;">
+    已复制到剪贴板! ✨
+</div>
+
+<label for="token">
+    <textarea id="token" class="token">Loading...</textarea>
+</label>
+
+<h2>Cookie</h2>
+<label for="cookie">
+    <textarea id="cookie" class="cookie">Loading...</textarea>
+</label>
+
+<label>
+    <button id="clearToken" class="clearToken">清空token</button>
+</label>
+<label>
+    <button id="copyToken" class="copyToken">复制token</button>
+</label>
+<label>
+    <button id="copyCookie" class="copyCookie">复制cookie</button>
+</label>
+
+<script src="popup.js"></script>
+</body>
+</html>

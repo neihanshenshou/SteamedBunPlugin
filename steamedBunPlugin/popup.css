@@ -1,0 +1,46 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    font-weight: bold;
+}
+
+textarea {
+    width: 400px;
+    height: 57px;
+    resize: none; /* Disable resizing */
+    padding: 7px 7px 7px 7px; /* Adjust padding to make space for buttons */
+    box-sizing: border-box; /* Include padding in box sizing */
+}
+
+.token, .cookie {
+    font-weight: bold;
+}
+
+textarea:hover {
+    color: green;
+}
+
+button {
+    font-weight: bold;
+    color: #fff;
+    background-color: #1677ff;
+    box-shadow: 0 2px 0 rgba(5, 145, 255, 0.1);
+    margin-top: 7px;
+    margin-bottom: 1px;
+    font-size: 14px;
+    height: 32px;
+    padding: 4px 15px;
+    border-radius: 6px;
+    border: 1px solid white;
+}
+
+button:hover {
+    background-color: #6ba4f5;
+}
