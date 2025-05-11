@@ -76,33 +76,48 @@ document.addEventListener('DOMContentLoaded', () => {
     const clearToken = document.getElementById("clearToken");
     const copyToken = document.getElementById("copyToken");
     const copyCookie = document.getElementById("copyCookie");
+    const clearCookie = document.getElementById("clearCookie");
     clearToken.addEventListener('click', function () {
         function tip() {
             chrome.storage.local.remove("token");
             document.getElementById('token').textContent = "token已清空! 🌧️";
 
-            // 显示自定义提示框
             const toast = document.getElementById("toast");
             toast.textContent = "Token已清空! ✨"
             toast.style.display = 'block';
 
-            // 设置定时器，几秒后自动隐藏
             setTimeout(function () {
                 toast.style.display = 'none';
             }, 2000);
         }
+
+        tip();
+    });
+
+    clearCookie.addEventListener('click', function () {
+        function tip() {
+            document.getElementById('cookie').textContent = "cookie已清空! 🌧️";
+
+            const toast = document.getElementById("toast");
+            toast.textContent = "Cookie已清空! ✨"
+            toast.style.display = 'block';
+
+            setTimeout(function () {
+                toast.style.display = 'none';
+            }, 2000);
+        }
+
         tip();
     });
 
     copyToken.addEventListener('click', function () {
         let token = document.getElementById('token').textContent;
         navigator.clipboard.writeText(token).then(function () {
-            // 显示自定义提示框
+
             const toast = document.getElementById("toast");
             toast.textContent = "Token已复制到剪贴板✅！"
             toast.style.display = 'block';
 
-            // 设置定时器，几秒后自动隐藏
             setTimeout(function () {
                 toast.style.display = 'none';
             }, 2000);
@@ -113,12 +128,11 @@ document.addEventListener('DOMContentLoaded', () => {
     copyCookie.addEventListener('click', function () {
         let cookie = document.getElementById('cookie').textContent;
         navigator.clipboard.writeText(cookie).then(function () {
-            // 显示自定义提示框
+
             const toast = document.getElementById("toast");
             toast.textContent = "Cookie已复制到剪贴板✅！"
             toast.style.display = 'block';
 
-            // 设置定时器，几秒后自动隐藏
             setTimeout(function () {
                 toast.style.display = 'none';
             }, 2000);

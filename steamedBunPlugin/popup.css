@@ -1,5 +1,6 @@
 body {
     font-family: Arial, sans-serif;
+    background: rgba(187, 184, 184, 0.15);
 }
 
 .container {
@@ -36,9 +37,10 @@ button {
     margin-bottom: 1px;
     font-size: 14px;
     height: 32px;
-    padding: 4px 15px;
+    padding: 4px 10px;
     border-radius: 6px;
-    border: 1px solid white;
+    border: 0 solid white;
+    margin-left: 1.7%;
 }
 
 button:hover {
