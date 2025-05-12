@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "虾仁",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "description": "浏览器Cookie展示插件（虾仁版）",
   "permissions": [
     "cookies",
@@ -13,7 +13,7 @@
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "icon16.png"
+      "128": "img.png"
     }
   },
   "host_permissions": [
