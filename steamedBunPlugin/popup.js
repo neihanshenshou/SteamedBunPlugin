@@ -1,4 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
+
+    function welcomeXiaRenPlugin() {
+        const welcome = document.getElementById("welcome");
+        welcome.textContent = "✨✨✨欢迎来到虾仁世界✨✨✨"
+        welcome.style.display = 'block';
+        setTimeout(function () {
+            welcome.style.display = 'none';
+        }, 2000);
+    }
+
+    welcomeXiaRenPlugin();
+
     function renderToken() {
         chrome.storage.local.get(['token'], (result) => {
             document.getElementById('token').textContent = result.token;
@@ -77,13 +89,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const copyToken = document.getElementById("copyToken");
     const copyCookie = document.getElementById("copyCookie");
     const clearCookie = document.getElementById("clearCookie");
+
     clearToken.addEventListener('click', function () {
         function tip() {
             chrome.storage.local.remove("token");
-            document.getElementById('token').textContent = "token已清空! 🌧️";
+            document.getElementById('token').textContent = "🌧️ Token已清空 ❌";
 
             const toast = document.getElementById("toast");
-            toast.textContent = "Token已清空! ✨"
+            toast.textContent = "🌧️ Token已清空 ❌"
             toast.style.display = 'block';
 
             setTimeout(function () {
@@ -93,13 +106,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         tip();
     });
-
     clearCookie.addEventListener('click', function () {
         function tip() {
-            document.getElementById('cookie').textContent = "cookie已清空! 🌧️";
+            document.getElementById('cookie').textContent = "🌧️ Cookie已清空 ❌";
 
             const toast = document.getElementById("toast");
-            toast.textContent = "Cookie已清空! ✨"
+            toast.textContent = "🌧️ Cookie已清空 ❌"
             toast.style.display = 'block';
 
             setTimeout(function () {
@@ -109,13 +121,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         tip();
     });
-
     copyToken.addEventListener('click', function () {
         let token = document.getElementById('token').textContent;
         navigator.clipboard.writeText(token).then(function () {
 
             const toast = document.getElementById("toast");
-            toast.textContent = "Token已复制到剪贴板✅！"
+            toast.textContent = "☀️ Token已复制到剪贴板 ✅"
             toast.style.display = 'block';
 
             setTimeout(function () {
@@ -130,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
         navigator.clipboard.writeText(cookie).then(function () {
 
             const toast = document.getElementById("toast");
-            toast.textContent = "Cookie已复制到剪贴板✅！"
+            toast.textContent = "☀️ Cookie已复制到剪贴板 ✅"
             toast.style.display = 'block';
 
             setTimeout(function () {
@@ -140,5 +151,4 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('复制失败: ', err);
         });
     });
-
 });
