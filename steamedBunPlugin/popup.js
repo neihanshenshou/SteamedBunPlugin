@@ -2,22 +2,59 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function welcomeXiaRenPlugin() {
         const welcome = document.getElementById("welcome");
-        welcome.textContent = "✨✨✨欢迎来到虾仁世界✨✨✨"
+        welcome.textContent = "✨✨欢迎来到虾仁世界✨✨"
         welcome.style.display = 'block';
         setTimeout(function () {
             welcome.style.display = 'none';
         }, 2000);
     }
 
-    welcomeXiaRenPlugin();
 
-    function renderToken() {
-        chrome.storage.local.get(['token'], (result) => {
-            document.getElementById('token').textContent = result.token;
+    function changeSelect() {
+        const selectElement = document.getElementById('tokenSelect');
+
+        // 加载并设置上一次的选择
+        chrome.storage.local.get(['tokenName'], function (result) {
+            if (result.tokenName) {
+                selectElement.value = result.tokenName;
+            }
+        });
+
+        // 监听选择变化并发送消息
+        selectElement.addEventListener('change', function () {
+            const selectedValue = selectElement.value;
+
+            // 保存选项到 storage
+            chrome.storage.local.set({tokenName: selectedValue}, function () {
+                console.log('已保存选择:', selectedValue);
+            });
+
+            // 发送消息给 background.js
+            chrome.runtime.sendMessage({action: "updateTokenName", tokenName: selectedValue}, function (response) {
+                console.log("响应:", response);
+            });
+
+            function tip() {
+                const toast = document.getElementById("toast");
+                toast.textContent = `刷新页面, 更新${selectedValue}的值🌹`
+                toast.style.display = 'block';
+
+                setTimeout(function () {
+                    toast.style.display = 'none';
+                }, 3000);
+            }
+
+            tip();
         });
     }
 
-    renderToken();
+
+    function renderToken() {
+        let tokenName = document.getElementById('tokenSelect').value;
+        chrome.storage.local.get([tokenName], (result) => {
+            document.getElementById('token').textContent = result.token;
+        });
+    }
 
     const cookieList = document.getElementById('cookie');
     // 获取当前活动标签页的 URL
@@ -151,4 +188,9 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('复制失败: ', err);
         });
     });
+
+    welcomeXiaRenPlugin();
+    changeSelect();
+    renderToken();
+
 });

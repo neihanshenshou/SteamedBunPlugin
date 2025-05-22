@@ -46,3 +46,28 @@ button {
 button:hover {
     background-color: #6ba4f5;
 }
+
+#tokenSelect {
+    position: fixed;
+    top: 11px;
+    right: 0;
+    transform: translateX(-13%);
+    /*background: rgba(187, 184, 184, 0.15);*/
+    font-weight: bold;
+    padding: 7px 7px 7px 7px;
+    border-radius: 5px;
+    width: 114px;
+    -webkit-appearance: none; /* Safari 和 Chrome */
+    -moz-appearance: none; /* Firefox */
+    appearance: none; /* 标准语法 */
+    text-align: center;
+    font-size: 14px;
+    background-color: rgb(24, 116, 252);
+    box-shadow: 0 2px 0 rgba(5, 145, 255, 0.1);
+    color: #fff;
+    border: 0 solid white;
+}
+
+#tokenSelect:hover {
+    background-color: #6ba4f5;
+}
