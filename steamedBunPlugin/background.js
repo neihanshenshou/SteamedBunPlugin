@@ -20,15 +20,21 @@ function getToken() {
                 const token = data.tokenName;
                 const requestHeaders = details.requestHeaders;
                 const tokenHeader = requestHeaders.find(header => header.name.toLowerCase() === token);
+                console.log(token);
                 if (tokenHeader) {
-                    chrome.storage.local.set({token: tokenHeader.value});
+                    if (token === "token") {
+                        chrome.storage.local.set({token: tokenHeader.value});
+                    } else if (token === "authorization") {
+                        chrome.storage.local.set({authorization: tokenHeader.value});
+                    } else if (token === "csrftoken") {
+                        chrome.storage.local.set({csrftoken: tokenHeader.value});
+                    }
                 }
             });
         },
         {urls: ["<all_urls>"]},
         ["requestHeaders"]
     );
-
 }
 
 getToken();

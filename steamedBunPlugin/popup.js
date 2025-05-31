@@ -9,51 +9,75 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 2000);
     }
 
+    function changeSelectCustom() {
 
-    function changeSelect() {
-        const selectElement = document.getElementById('tokenSelect');
+        const selected = document.getElementById('selected');
+        const optionsContainer = document.getElementById('options');
 
         // 加载并设置上一次的选择
         chrome.storage.local.get(['tokenName'], function (result) {
             if (result.tokenName) {
-                selectElement.value = result.tokenName;
+                selected.innerText = result.tokenName;
             }
         });
-
-        // 监听选择变化并发送消息
-        selectElement.addEventListener('change', function () {
-            const selectedValue = selectElement.value;
-
-            // 保存选项到 storage
-            chrome.storage.local.set({tokenName: selectedValue}, function () {
-                console.log('已保存选择:', selectedValue);
-            });
-
-            // 发送消息给 background.js
-            chrome.runtime.sendMessage({action: "updateTokenName", tokenName: selectedValue}, function (response) {
-                console.log("响应:", response);
-            });
-
-            function tip() {
-                const toast = document.getElementById("toast");
-                toast.textContent = `刷新页面, 更新${selectedValue}的值🌹`
-                toast.style.display = 'block';
-
-                setTimeout(function () {
-                    toast.style.display = 'none';
-                }, 3000);
-            }
-
-            tip();
+        selected.addEventListener('click', () => {
+            optionsContainer.style.display = optionsContainer.style.display === 'block' ? 'none' : 'block';
         });
+
+        // 将 options 转换为数组
+        const options = Array.from(document.getElementsByClassName('option'));
+        options.forEach(option => {
+            option.addEventListener('click', () => {
+                let selectedValue = option.innerText;
+                selected.innerText = selectedValue;
+                optionsContainer.style.display = 'none';
+                // 保存选项到 storage
+                chrome.storage.local.set({tokenName: selectedValue}, function () {
+                    console.log('已保存选择:', selectedValue);
+                });
+
+                // 发送消息给 background.js
+                chrome.runtime.sendMessage({action: "updateTokenName", tokenName: selectedValue}, function (response) {
+                    console.log("响应:", response);
+                });
+                renderToken();
+
+                function tip() {
+                    const toast = document.getElementById("toast");
+                    toast.textContent = `刷新页面, 以更新${selectedValue}值`
+                    toast.style.display = 'block';
+
+                    setTimeout(function () {
+                        toast.style.display = 'none';
+                    }, 3000);
+                }
+
+                tip();
+            });
+        });
+
     }
 
-
     function renderToken() {
-        let tokenName = document.getElementById('tokenSelect').value;
-        chrome.storage.local.get([tokenName], (result) => {
-            document.getElementById('token').textContent = result.token;
+        let tokenName = document.getElementById('selected').innerText;
+
+        let finalTokenName = null;
+        chrome.storage.local.get(["tokenName"], (result) => {
+            finalTokenName = result.tokenName || tokenName;
+
+            chrome.storage.local.get([finalTokenName], (result) => {
+                let val = null;
+                if (finalTokenName === "token") {
+                    val = result.token;
+                } else if (finalTokenName === "authorization") {
+                    val = result.authorization;
+                } else if (finalTokenName === "csrftoken") {
+                    val = result.csrftoken;
+                }
+                document.getElementById('token').textContent = val || `此网站没有: ${finalTokenName}`;
+            });
         });
+
     }
 
     const cookieList = document.getElementById('cookie');
@@ -130,10 +154,12 @@ document.addEventListener('DOMContentLoaded', () => {
     clearToken.addEventListener('click', function () {
         function tip() {
             chrome.storage.local.remove("token");
-            document.getElementById('token').textContent = "🌧️ Token已清空 ❌";
+            chrome.storage.local.remove("csrftoken");
+            chrome.storage.local.remove("authorization");
+            document.getElementById('token').textContent = "Token已清空 🌧️";
 
             const toast = document.getElementById("toast");
-            toast.textContent = "🌧️ Token已清空 ❌"
+            toast.textContent = "Token已清空 🌧️"
             toast.style.display = 'block';
 
             setTimeout(function () {
@@ -145,10 +171,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     clearCookie.addEventListener('click', function () {
         function tip() {
-            document.getElementById('cookie').textContent = "🌧️ Cookie已清空 ❌";
+            document.getElementById('cookie').textContent = "Cookie已清空 🌧️";
 
             const toast = document.getElementById("toast");
-            toast.textContent = "🌧️ Cookie已清空 ❌"
+            toast.textContent = "Cookie已清空 🌧️"
             toast.style.display = 'block';
 
             setTimeout(function () {
@@ -163,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
         navigator.clipboard.writeText(token).then(function () {
 
             const toast = document.getElementById("toast");
-            toast.textContent = "☀️ Token已复制到剪贴板 ✅"
+            toast.textContent = "Token已复制到剪贴板 🦐"
             toast.style.display = 'block';
 
             setTimeout(function () {
@@ -178,7 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
         navigator.clipboard.writeText(cookie).then(function () {
 
             const toast = document.getElementById("toast");
-            toast.textContent = "☀️ Cookie已复制到剪贴板 ✅"
+            toast.textContent = "Cookie已复制到剪贴板 🦐"
             toast.style.display = 'block';
 
             setTimeout(function () {
@@ -190,7 +216,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     welcomeXiaRenPlugin();
-    changeSelect();
+    changeSelectCustom();
     renderToken();
-
 });

@@ -18,20 +18,44 @@ textarea {
     resize: none; /* Disable resizing */
     padding: 7px 7px 7px 7px; /* Adjust padding to make space for buttons */
     box-sizing: border-box; /* Include padding in box sizing */
+    color: #c9aa43;
+    animation: textAreaColor 5s ease; /* 动画效果 */
 }
+
+@keyframes textAreaColor {
+    0% {
+        color: #b8b7b7;
+    }
+    20% {
+        color: #98b1aa;
+    }
+    40% {
+        color: #bd9898;
+    }
+    60% {
+        color: #667182;
+    }
+    80% {
+        color: #798b6b;
+    }
+    100% {
+        color: #927a7a;
+    }
+}
+
 
 .token, .cookie {
     font-weight: bold;
 }
 
 textarea:hover {
-    color: green;
+    color: #85c785;
 }
 
 button {
     font-weight: bold;
     color: #fff;
-    background-color: #1677ff;
+    background-color: #f58425;
     box-shadow: 0 2px 0 rgba(5, 145, 255, 0.1);
     margin-top: 7px;
     margin-bottom: 1px;
@@ -44,30 +68,98 @@ button {
 }
 
 button:hover {
-    background-color: #6ba4f5;
+    background: linear-gradient(45deg, #f8ad21, #f8ad21); /* 渐变颜色 */
 }
 
-#tokenSelect {
+.selectDiv {
     position: fixed;
     top: 11px;
     right: 0;
     transform: translateX(-13%);
-    /*background: rgba(187, 184, 184, 0.15);*/
     font-weight: bold;
-    padding: 7px 7px 7px 7px;
-    border-radius: 5px;
-    width: 114px;
-    -webkit-appearance: none; /* Safari 和 Chrome */
-    -moz-appearance: none; /* Firefox */
-    appearance: none; /* 标准语法 */
+    border-radius: 10%;
+    width: 100px;
     text-align: center;
     font-size: 14px;
-    background-color: rgb(24, 116, 252);
-    box-shadow: 0 2px 0 rgba(5, 145, 255, 0.1);
+    background-color: #f58425;
     color: #fff;
     border: 0 solid white;
 }
 
-#tokenSelect:hover {
-    background-color: #6ba4f5;
+.selected {
+    background-color: #f58425;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.selected:hover {
+    background-color: #f8ad21;
+}
+
+.options {
+    display: none;
+    position: absolute;
+    background-color: #f1f0f0;
+    border-radius: 10%;
+    width: 100%;
+    z-index: 1;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    color: #f58425;
+}
+
+.option {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.option:hover {
+    background: linear-gradient(90deg, #f8dfc7, #f3bd93); /* 渐变颜色 */
+    animation: textAreaColor 2s ease infinite; /* 动画效果 */
+}
+
+
+#toast {
+    display: none;
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    background: linear-gradient(90deg, #f38920, #f3bd93); /* 渐变颜色 */
+    opacity: 0;
+    animation: gradientAnimation 2s ease infinite; /* 动画效果 */
+}
+
+@keyframes gradientAnimation {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+
+#welcome {
+    display: none;
+    position: fixed;
+    top: 10px;
+    left: 51%;
+    transform: translateX(-50%);
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    background: linear-gradient(90deg, #f38920, #f3bd93); /* 渐变颜色 */
+    animation: gradientAnimation 2s ease infinite; /* 动画效果 */
+}
+
+
+h2 {
+    background: linear-gradient(90deg, #f6c05a, #f7f8c6); /* 渐变颜色 */
+    -webkit-background-clip: text; /* 文本背景剪裁 */
+    -webkit-text-fill-color: transparent; /* 填充颜色透明 */
 }

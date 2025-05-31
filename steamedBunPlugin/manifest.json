@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "虾仁",
-  "version": "2.0.0",
-  "description": "浏览器Cookie展示插件（虾仁版）",
+  "name": "虾仁Plugin",
+  "version": "3.0.0",
+  "description": "浏览器鉴权展示插件（虾仁版）",
   "permissions": [
     "cookies",
     "tabs",

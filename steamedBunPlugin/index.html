@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<div class="custom-select">
+    <div class="selected">选择一个选项</div>
+    <ul class="options">
+        <li class="option">选项 1</li>
+        <li class="option">选项 2</li>
+        <li class="option">选项 3</li>
+    </ul>
+</div>
+
+<style>
+    .custom-select {
+        position: relative;
+        width: 200px;
+    }
+
+    .selected {
+        background-color: #f0f0f0;
+        padding: 10px;
+        border: 1px solid #ccc;
+    }
+
+    .options {
+        display: none;
+        position: absolute;
+        background-color: white;
+        border: 1px solid #ccc;
+        width: 100%;
+        z-index: 1;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .option {
+        padding: 10px;
+        cursor: pointer;
+    }
+
+    .option:hover {
+        background-color: #e0e0e0;
+    }
+</style>
+
+<script>
+    const selected = document.querySelector('.selected');
+    const optionsContainer = document.querySelector('.options');
+    selected.addEventListener('click', () => {
+        optionsContainer.style.display = optionsContainer.style.display === 'block' ? 'none' : 'block';
+    });
+
+
+    document.querySelectorAll('.option').forEach(option => {
+        option.addEventListener('click', () => {
+            selected.innerText = option.innerText;
+            optionsContainer.style.display = 'none';
+        });
+    });
+
+    document.addEventListener('click', (event) => {
+        if (!event.target.closest('.custom-select')) {
+            optionsContainer.style.display = 'none';
+        }
+    });
+</script>
+
+</html>
