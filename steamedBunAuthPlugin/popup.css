@@ -1,6 +1,7 @@
 body {
     font-family: Arial, sans-serif;
     background: rgba(187, 184, 184, 0.15);
+    height: 94.5vh;
 }
 
 .container {
@@ -10,11 +11,12 @@ body {
     flex-wrap: wrap;
     justify-content: space-between;
     font-weight: bold;
+
 }
 
 textarea {
     width: 400px;
-    height: 57px;
+    height: 30vh;
     resize: none; /* Disable resizing */
     padding: 7px 7px 7px 7px; /* Adjust padding to make space for buttons */
     box-sizing: border-box; /* Include padding in box sizing */

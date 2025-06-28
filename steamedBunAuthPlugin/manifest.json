@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "虾仁Plugin",
+  "name": "虾仁Auth鉴权",
   "version": "3.0.0",
   "description": "浏览器鉴权展示插件（虾仁版）",
   "permissions": [
