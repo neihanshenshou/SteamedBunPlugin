@@ -1,0 +1,57 @@
+{
+  "manifest_version": 3,
+  "name": "虾仁Xpath",
+  "version": "3.4.0",
+  "description": "选择页面元素并生成对应Xpath路径 - 无敌虾仁",
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "images/default_img.png",
+      "48": "images/default_img.png",
+      "128": "images/default_img.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "tabs",
+    "storage"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "css/content.css"
+      ],
+      "run_at": "document_end",
+      "all_frames": true
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "error.html",
+        "css/tailwind.css"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
+  "icons": {
+    "16": "images/default_img.png",
+    "48": "images/default_img.png",
+    "128": "images/default_img.png"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
+}
