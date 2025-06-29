@@ -841,10 +841,10 @@ function getXPathsWithClass(element) {
         let splitClass = clickedItemClass.trim().split(" ");
         if (splitClass.length > 2) {
             let cl = `${splitClass[0]} ${splitClass[1]}`;
-            xpath = `//${element.tagName.toLowerCase()}[contains(@class,'${cl}')]`;
+            xpath = `//${element.tagName.toLowerCase()}[contains(@class,"${cl}")]`;
             let {count, index} = getElementIndexByXPath(xpath, element);
             if (count > 1) {
-                xpath = `(//${element.tagName.toLowerCase()}[contains(@class,'${cl}')])[${index}]`;
+                xpath = `(//${element.tagName.toLowerCase()}[contains(@class,"${cl}")])[${index}]`;
             }
         } else {
             xpath = `//${element.tagName.toLowerCase()}[@class="${clickedItemClass}"]`;
