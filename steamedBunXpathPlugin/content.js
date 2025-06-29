@@ -1148,7 +1148,7 @@ function getXPathsWithPosition(element) {
 
     results.push({
         xpath: path,
-        description: `兄弟元素${elementInfo["position"]}${getOrdinalSuffix(
+        description: `兄弟元素第${elementInfo["position"]}${getOrdinalSuffix(
             position
         )}${element.tagName.toLowerCase()}`,
     });
@@ -1346,7 +1346,7 @@ function getRelativePathToParent(element, parent) {
 
 // 辅助功能获得序列后缀
 function getOrdinalSuffix(n) {
-    const s = ["th", "st", "nd", "rd"];
+    const s = ["个", "个", "个", "个"];
     const v = n % 100;
     return s[(v - 20) % 10] || s[v] || s[0];
 }

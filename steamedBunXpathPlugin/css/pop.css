@@ -9,11 +9,11 @@ body {
 /* Toggle switch styles */
 .toggle-checkbox:checked {
     transform: translateX(100%);
-    border-color: #4f46e5;
+    border-color: #f5923b;
 }
 
 .toggle-checkbox:checked + .toggle-label {
-    background-color: #4f46e5;
+    background-color: #f57d1b;
 }
 
 /* Simple mode toggle */
@@ -55,7 +55,7 @@ body {
 }
 
 input:checked + .simple-slider {
-    background-color: #10b981;
+    background-color: rgb(245, 125, 27);
 }
 
 input:checked + .simple-slider:before {

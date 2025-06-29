@@ -67,11 +67,16 @@ const badge = {
     set(count) {
         chrome.action.setBadgeText({text: count > 0 ? count.toString() : ""});
         chrome.action.setBadgeBackgroundColor({
-            color: count > 0 ? "#4F46E5" : "#EF4444",
+            color: count > 0 ? "#019901" : "#ffffff",
         });
+        chrome.action.setBadgeTextColor({
+            color: count > 0 ? "#ffffff" : "#f11313", // 设置文本颜色
+        });
+
     },
     clear() {
         chrome.action.setBadgeText({text: ""});
+        chrome.action.setBadgeTextColor({color: "#ffffff"}); // 清除时设置默认颜色
     },
 };
 

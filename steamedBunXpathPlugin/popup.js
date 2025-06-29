@@ -217,6 +217,16 @@ const xpathManager = {
         const buttonContainer = document.createElement("div");
         buttonContainer.className = "flex space-x-2";
 
+        // Create Code button
+        const codeButton = document.createElement("button");
+        codeButton.className =
+            "text-xs bg-indigo-500 text-white px-2 py-1 rounded hover:bg-indigo-600 transition-colors focus:outline-none code-button";
+        codeButton.style.border = "none";
+        codeButton.textContent = "Code";
+        codeButton.addEventListener("click", () =>
+            this.copyCodeToClipboard(xpath, codeButton)
+        );
+
         // Create Copy button
         const copyButton = document.createElement("div");
         copyButton.className = "text-xs px-2 py-1 rounded copy-button";
@@ -238,6 +248,7 @@ const xpathManager = {
             xpathContent.appendChild(xpathDescription);
         }
 
+        buttonContainer.appendChild(codeButton);
         buttonContainer.appendChild(copyButton);
 
         container.appendChild(xpathContent);
@@ -271,9 +282,16 @@ const xpathManager = {
         }, 1000);
     },
 
-    copyXPathToClipboard(xpathOrCss, copyButton) {
-        navigator.clipboard.writeText(xpathOrCss).then(function () {
+    copyXPathToClipboard(xpath, copyButton) {
+        navigator.clipboard.writeText(xpath).then(function () {
             xpathManager.showTips(copyButton);
+        });
+    },
+
+    copyCodeToClipboard(xpath, codeButton) {
+        let code = `driver.find_element("xpath", '${xpath}')`;
+        navigator.clipboard.writeText(code).then(function () {
+            xpathManager.showTips(codeButton);
         });
     },
 
