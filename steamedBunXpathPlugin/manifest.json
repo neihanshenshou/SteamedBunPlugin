@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "虾仁Xpath",
-  "version": "3.4.0",
+  "version": "3.7.0",
   "description": "选择页面元素并生成对应Xpath路径 - 无敌虾仁",
   "action": {
     "default_popup": "popup.html",

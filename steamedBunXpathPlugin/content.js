@@ -632,107 +632,165 @@ function handleElementClick(event) {
 }
 
 // 多种xpath选择器
-function generateXPaths(element) {
-    const xpaths = [];
 
-    // 1. 绝对路径
+// 优化XPath有效性验证和排序
+function generateXPaths(element) {
+    let xpaths;
+    const originalXpaths = [];
+
+    // 1. 绝对路径（仅作为备用）
     const absoluteXPath = getAbsoluteXPath(element);
-    xpaths.push({
+    originalXpaths.push({
         type: "绝对路径",
         xpath: absoluteXPath,
         description: "绝对路径(不建议使用)",
+        score: 1 // 低优先级评分
     });
 
-    // 2. 基于ID
+    // 2. 基于ID（高优先级）
     const idXPaths = getXPathsWithId(element);
-    idXPaths.forEach((xpath) => {
-        xpaths.push({
+    idXPaths.forEach(xpath => {
+        originalXpaths.push({
             type: "基于ID",
             xpath: xpath.xpath,
             description: xpath.description,
+            score: 5 // 高优先级评分
         });
     });
 
     // 3. 基于类名
     const classXPaths = getXPathsWithClass(element);
-    classXPaths.forEach((xpath) => {
-        xpaths.push({
+    classXPaths.forEach(xpath => {
+        originalXpaths.push({
             type: "基于类名",
             xpath: xpath.xpath,
             description: xpath.description,
+            score: 3 // 中优先级评分
         });
     });
 
     // 4. 基于属性
     const attrXPaths = getXPathsWithAttributes(element);
-    attrXPaths.forEach((xpath) => {
-        xpaths.push({
+    attrXPaths.forEach(xpath => {
+        originalXpaths.push({
             type: "基于属性",
             xpath: xpath.xpath,
             description: xpath.description,
+            score: 2 // 中低优先级评分
         });
     });
 
     // 5. 优化的XPath
     const optimizedXPaths = getOptimizedXPaths(element);
-    optimizedXPaths.forEach((xpath) => {
-        xpaths.push({
+    optimizedXPaths.forEach(xpath => {
+        originalXpaths.push({
             type: "智能优化",
             xpath: xpath.xpath,
             description: xpath.description,
+            score: 4 // 较高优先级评分
         });
     });
 
     // 6. 基于文本
     const textXPaths = getXPathsWithText(element);
-    textXPaths.forEach((xpath) => {
-        xpaths.push({
+    textXPaths.forEach(xpath => {
+        originalXpaths.push({
             type: "基于文本",
             xpath: xpath.xpath,
             description: xpath.description,
+            score: 3 // 中优先级评分
         });
     });
 
     // 7. 基于层级
     const positionXPaths = getXPathsWithPosition(element);
-    positionXPaths.forEach((xpath) => {
-        xpaths.push({
+    positionXPaths.forEach(xpath => {
+        originalXpaths.push({
             type: "基于层级",
             xpath: xpath.xpath,
             description: xpath.description,
+            score: 2 // 中低优先级评分
         });
     });
 
+    // 过滤和排序XPath
+    xpaths = filterAndSortXPaths(originalXpaths, element);
     return xpaths;
+}
+
+// 过滤无效XPath并按优先级排序
+function filterAndSortXPaths(xpaths, element) {
+    const validXpaths = [];
+
+    xpaths.forEach(xpathObj => {
+        const {count, index, error} = getElementIndexByXPath(xpathObj.xpath, element);
+
+        if (count > 0 && index > 0 && !error) {
+            // 计算唯一性得分
+            const uniquenessScore = 10 - (count / 10);
+            // 综合得分 = 基础优先级 + 唯一性得分
+            const totalScore = xpathObj.score + uniquenessScore;
+
+            validXpaths.push({
+                ...xpathObj,
+                count,
+                index,
+                totalScore
+            });
+        }
+    });
+
+    // 按综合得分降序排序
+    return validXpaths.sort((a, b) => b.totalScore - a.totalScore);
 }
 
 // 检查元素是否在iframe内部
 function isElementInIframe(element) {
     try {
-        return element.ownerDocument !== document;
+        if (!element || !element.ownerDocument) return false;
+
+        // 检查是否在iframe中，包括嵌套iframe
+        let currentDoc = element.ownerDocument;
+        while (currentDoc && currentDoc !== document) {
+            if (currentDoc.defaultView && currentDoc.defaultView.frameElement) {
+                return true;
+            }
+            currentDoc = currentDoc.parent.document || null;
+        }
+        return false;
     } catch (e) {
         return false;
     }
 }
 
 // 获取元素的iframe路径
+// 获取完整的iframe路径
 function getIframePath(element) {
     try {
         const elementDocument = element.ownerDocument;
-        const iframes = document.querySelectorAll("iframe");
+        const iframePathArray = [];
 
-        for (let i = 0; i < iframes.length; i++) {
-            try {
-                if (iframes[i].contentDocument === elementDocument) {
-                    return getAbsoluteXPath(iframes[i]);
-                }
-            } catch (e) {
+        // 处理嵌套iframe
+        let currentDoc = elementDocument;
+        while (currentDoc && currentDoc !== document) {
+            if (currentDoc.defaultView && currentDoc.defaultView.frameElement) {
+                const iframeElement = currentDoc.defaultView.frameElement;
+                const iframeXPath = getAbsoluteXPath(iframeElement);
+                iframePathArray.unshift(iframeXPath);
+                currentDoc = currentDoc.parent.document;
+            } else {
+                break;
             }
+        }
+
+        // 构建完整的iframe路径
+        if (iframePathArray.length > 0) {
+            return iframePathArray.join("/iframe[1]/");
         }
 
         return "//iframe";
     } catch (e) {
-        console.error("Error getting iframe path:", e);
+        console.error("获取iframe路径错误:", e);
         return "//iframe";
     }
 }
@@ -799,13 +857,41 @@ function getAbsoluteXPath(element) {
     return `/html/body${xpath}`;
 }
 
+// 转义XPath中的特殊字符
+function escapeXPathString(value) {
+    if (!value) return "";
+
+    // 转义单引号、双引号和&符号
+    value = value.replace(/'/g, "'\"'\"'"); // 用于单引号包裹的XPath
+    value = value.replace(/"/g, '\\"');     // 用于双引号包裹的XPath
+    value = value.replace(/&/g, '&amp;');
+    value = value.replace(/</g, '&lt;');
+    value = value.replace(/>/g, '&gt;');
+    value = value.replace(/\$/g, '\\$');
+    value = value.replace(/\^/g, '\\^');
+    value = value.replace(/\{/g, '\\{');
+    value = value.replace(/\}/g, '\\}');
+    value = value.replace(/\|/g, '\\|');
+    value = value.replace(/\(/g, '\\(');
+    value = value.replace(/\)/g, '\\)');
+    value = value.replace(/\*/g, '\\*');
+    value = value.replace(/\+/g, '\\+');
+    value = value.replace(/\?/g, '\\?');
+    value = value.replace(/\[/g, '\\[');
+    value = value.replace(/\]/g, '\\]');
+    value = value.replace(/\\/g, '\\\\');
+
+    return value;
+}
+
 // 基于ID生成xpath
 function getXPathsWithId(element, needParent = true) {
     const results = [];
 
     if (element.id) {
+        const escapedId = escapeXPathString(element.id);
         results.push({
-            xpath: `//${element.tagName.toLowerCase()}[@id="${element.id}"]`,
+            xpath: `//${element.tagName.toLowerCase()}[@id="${escapedId}"]`,
             description: "根据元素的标签名称和ID属性匹配",
         });
     }
@@ -874,8 +960,11 @@ function getXPathsWithAttributes(element) {
         if (excludedAttributes.includes(attr.name)) continue;
 
         if (attr.value) {
+            const escapedAttrName = escapeXPathString(attr.name);
+            const escapedAttrValue = escapeXPathString(attr.value);
+
             // 精确匹配
-            let xpath = `//${element.tagName.toLowerCase()}[@${attr.name}="${attr.value}"]`;
+            let xpath = `//${element.tagName.toLowerCase()}[@${escapedAttrName}="${escapedAttrValue}"]`;
             let {count, index} = getElementIndexByXPath(xpath, element);
             if (count > 1) {
                 xpath = `(//${element.tagName.toLowerCase()}[@${attr.name}="${attr.value}"])[${index}]`
@@ -885,11 +974,12 @@ function getXPathsWithAttributes(element) {
                 description: `使用 "${attr.name}" 属性`,
             });
 
-            // 属性过程 模糊匹配
+            // 属性过长 模糊匹配
             if (attr.value.length > 10) {
+                const partialValue = escapeXPathString(attr.value.substring(0, 10));
                 xpath = `//${element.tagName.toLowerCase()}[contains(@${
-                    attr.name
-                }, "${attr.value.substring(0, 10)}")]`;
+                    escapedAttrName
+                }, "${partialValue}")]`;
                 if (count > 1) {
                     xpath = `(//${element.tagName.toLowerCase()}[contains(@${
                         attr.name
@@ -975,26 +1065,63 @@ function getDirectTextContent(element) {
     return text;
 }
 
+// 获取元素的完整文本内容，包括子元素文本
+function getFullTextContent(element) {
+    let text = "";
+
+    // 处理直接文本节点
+    const textNodes = Array.from(element.childNodes).filter(
+        node => node.nodeType === Node.TEXT_NODE
+    );
+
+    textNodes.forEach(node => {
+        text += node.textContent.trim() + " ";
+    });
+
+    // 递归处理子元素文本
+    const childElements = Array.from(element.children);
+    childElements.forEach(child => {
+        text += getFullTextContent(child).trim() + " ";
+    });
+
+    return text.trim();
+}
+
 // 基于文本
 function getXPathsWithText(element) {
     const results = [];
 
+    const fullText = getFullTextContent(element);
     const directText = getDirectTextContent(element);
 
-    if (directText && directText.length > 0) {
-        if (directText.length < 50) {
+
+    if (fullText && fullText.length > 0) {
+        // 完整文本匹配（仅当文本较短时使用）
+        if (fullText.length < 50) {
+            const escapedText = escapeXPathString(fullText);
             results.push({
-                xpath: `//${element.tagName.toLowerCase()}[text()="${directText}"]`,
-                description: "使用文本内容精准匹配",
+                xpath: `//${element.tagName.toLowerCase()}[.="${escapedText}"]`,
+                description: "使用完整文本内容精准匹配",
             });
         }
 
-        const firstWords = directText.slice(0, 5);
-
-        if (directText.length > 10) {
+        // 部分文本匹配
+        const firstWords = escapeXPathString(fullText.slice(0, 10));
+        if (fullText.length > 10) {
             results.push({
-                xpath: `//${element.tagName.toLowerCase()}[contains(text(), "${firstWords}")]`,
+                xpath: `//${element.tagName.toLowerCase()}[contains(., "${firstWords}")]`,
                 description: "使用部分文本内容模糊匹配",
+            });
+        }
+    }
+
+    // 直接文本匹配（仅当直接文本与完整文本不同时使用）
+    if (directText && directText.length > 0 && directText !== fullText) {
+        if (directText.length < 50) {
+            const escapedText = escapeXPathString(directText);
+            results.push({
+                xpath: `//${element.tagName.toLowerCase()}[normalize-space()="${escapedText}"]`,
+                description: "使用直接文本内容精准匹配",
             });
         }
     }

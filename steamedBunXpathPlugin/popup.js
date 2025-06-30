@@ -285,6 +285,8 @@ const xpathManager = {
     copyXPathToClipboard(xpath, copyButton) {
         navigator.clipboard.writeText(xpath).then(function () {
             xpathManager.showTips(copyButton);
+            ui.elements.xpathInput.value = xpath;
+            communication.searchXPath();
         });
     },
 
