@@ -9,20 +9,17 @@ const icon = {
     setActive() {
         chrome.action.setIcon({
             path: {
-                "16": "images/active_img.png",
-                "32": "images/active_img.png",
-                "48": "images/active_img.png",
-                "128": "images/active_img.png",
+
+                "48": "images/48a_img.png",
+                "128": "images/128a_img.png"
             },
         });
     },
     setInactive() {
         chrome.action.setIcon({
             path: {
-                "16": "images/default_img.png",
-                "32": "images/default_img.png",
-                "48": "images/default_img.png",
-                "128": "images/default_img.png",
+                "48": "images/48img.png",
+                "128": "images/128img.png"
             },
         });
     },
