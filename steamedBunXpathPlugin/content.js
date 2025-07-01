@@ -72,6 +72,10 @@ const excludedAttributes = [
     "ontransitionend"
 ];
 
+// 检测操作系统类型
+const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+const isWindows = navigator.platform.toUpperCase().indexOf('WIN') >= 0;
+
 // 检查扩展是否可以在当前页面上运行
 function canRunOnPage() {
     // 检查是否在常规网页中（不是Chrome内部页面）
@@ -367,7 +371,9 @@ function deactivateElementSelection() {
 // 鼠标悬浮事件
 function handleMouseOver(event) {
     if (!isActive) return;
-    if (!event.shiftKey) return;
+    // 根据操作系统选择触发按键
+    const modifierKeyPressed = (isMac && event.shiftKey) || (isWindows && event.ctrlKey);
+    if (!modifierKeyPressed) return;
     // 更新高亮元素
     highlightedElement = event.target;
 
@@ -576,8 +582,10 @@ function getShortXPath(element) {
 function handleElementClick(event) {
     if (!isActive) return;
     clearHighlightedElements();
+    // 根据操作系统选择触发按键
+    const modifierKeyPressed = (isMac && event.shiftKey) || (isWindows && event.ctrlKey);
 
-    if (event.shiftKey) {
+    if (modifierKeyPressed) {
         // 阻止元素的默认事件, 例如a标签、form提交操作等
         event.preventDefault();
         // 阻止事件向上冒泡，避免父元素的事件被触发
@@ -588,12 +596,12 @@ function handleElementClick(event) {
     const element = event.target;
 
     // 生成xpath路径
-    if (!event.shiftKey) return;
+    if (!modifierKeyPressed) return;
     const xpathSelectors = generateXPaths(element);
 
 
     // 按下shift键 + 鼠标点击 才会有提示
-    if (event.shiftKey) {
+    if (modifierKeyPressed) {
         // 更新高亮元素
         highlightedElement = event.target;
         updateTooltip(event, highlightedElement);
@@ -631,7 +639,6 @@ function handleElementClick(event) {
     return false;
 }
 
-// 多种xpath选择器
 
 // 优化XPath有效性验证和排序
 function generateXPaths(element) {

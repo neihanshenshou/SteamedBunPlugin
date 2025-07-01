@@ -165,7 +165,7 @@ button {
 }
 
 .beautiful-reset {
-    padding: 9px 20px;
+    padding: 8px 20px;
     font-size: 16px;
     border: none;
     border-radius: 5px;
@@ -188,7 +188,7 @@ button {
 
 .beautiful-reset:focus {
     outline: none;
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5);
+    box-shadow: 0 0 0 1px rgba(0, 123, 255, 0.5);
 }
 
 
