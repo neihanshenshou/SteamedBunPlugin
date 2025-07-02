@@ -184,7 +184,7 @@ const handlers = {
 
         sendResponse({
             canRun: !isRestricted,
-            reason: isRestricted ? "Cannot run on this page" : null,
+            reason: isRestricted ? "不能在此页面运行" : null,
         });
         return true;
     },

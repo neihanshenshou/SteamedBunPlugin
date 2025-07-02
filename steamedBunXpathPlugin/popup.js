@@ -322,7 +322,7 @@ const communication = {
 
                     if (!response || response.canRun === false) {
                         ui.showErrorState(
-                            response ? response.reason : "Cannot run on this page"
+                            response ? response.reason : "不能在此页面运行"
                         );
                         return;
                     }
