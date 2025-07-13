@@ -9,7 +9,6 @@ const icon = {
     setActive() {
         chrome.action.setIcon({
             path: {
-
                 "48": "images/48a_img.png",
                 "128": "images/128a_img.png"
             },
@@ -174,7 +173,7 @@ const handlers = {
     async checkPageCompatibility(_, sendResponse) {
         const tabs = await chrome.tabs.query({active: true, currentWindow: true});
         if (!tabs?.length) {
-            return sendResponse({canRun: false, reason: "No active tab"});
+            return sendResponse({canRun: false, reason: "没有可用的页签, 尝试刷新"});
         }
 
         state.activeTabId = tabs[0].id;
@@ -220,13 +219,18 @@ const handlers = {
 
 // 监听事件
 chrome.runtime.onInstalled.addListener(() => {
+    // 设置默认侧边栏状态
+    chrome.sidePanel.setOptions({
+        path: 'sidepanel.html',
+        enabled: true
+    });
 });
 
-chrome.tabs.onActivated.addListener(async (tabId) => {
-    if (state.activeTabId && state.activeTabId !== tabId) {
+chrome.tabs.onActivated.addListener(async (activeInfo) => {
+    if (state.activeTabId && state.activeTabId !== activeInfo.tabId) {
         await extension.deactivate();
     }
-    state.activeTabId = tabId;
+    state.activeTabId = activeInfo.tabId;
 });
 
 chrome.tabs.onUpdated.addListener(async (tabId) => {

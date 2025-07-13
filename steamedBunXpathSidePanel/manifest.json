@@ -1,14 +1,14 @@
 {
   "manifest_version": 3,
-  "name": "SteamedBunXpath",
-  "version": "3.7.2",
-  "description": "选择页面元素并生成对应Xpath路径，Windows系统使用 Ctrl + 鼠标悬浮并点击生成，Mac系统使用 Shift + 鼠标悬浮并点击生成。 - 馒头 ",
+  "name": "SteamedBunXpath-SidePanel",
+  "version": "3.7.3",
+  "description": "插件固定于边侧栏, 选择页面元素并生成对应Xpath路径，Windows系统使用 Ctrl + 鼠标悬浮并点击生成，Mac系统使用 Shift + 鼠标悬浮并点击生成。 - 馒头 ",
   "action": {
-    "default_popup": "popup.html",
     "default_icon": {
       "48": "images/48img.png",
       "128": "images/128img.png"
-    }
+    },
+    "default_popup": "popup.html"
   },
   "background": {
     "service_worker": "background.js"
@@ -17,8 +17,21 @@
     "activeTab",
     "scripting",
     "tabs",
-    "storage"
+    "storage",
+    "sidePanel"
   ],
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "commands": {
+    "open-sidepanel": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+S",
+        "mac": "Shift+Command+S"
+      },
+      "description": "打开侧边栏"
+    }
+  },
   "content_scripts": [
     {
       "matches": [
@@ -31,7 +44,7 @@
         "css/content.css"
       ],
       "run_at": "document_end",
-      "all_frames": true
+      "all_frames": false
     }
   ],
   "web_accessible_resources": [

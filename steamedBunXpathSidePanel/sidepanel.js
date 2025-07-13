@@ -164,8 +164,7 @@ const xpathManager = {
         const modeChangeNotice = document.createElement("div");
         modeChangeNotice.className =
             "text-blue-600 text-xs p-2 bg-blue-50 rounded-md mb-2 notice";
-        modeChangeNotice.textContent =
-            "自动切换到完整模式以显示更多Xpath选项";
+        modeChangeNotice.textContent = "自动切换到完整模式以显示更多Xpath选项";
         ui.elements.xpathList.appendChild(modeChangeNotice);
     },
 
@@ -520,6 +519,7 @@ const communication = {
             }
         });
     },
+
     clearHighlightedElements() {
         // 清空input字段
         ui.elements.xpathInput.value = "";
@@ -609,8 +609,10 @@ const eventHandlers = {
     },
 };
 
-// 初始化pop页面
+
+// 初始化侧边栏页面
 document.addEventListener("DOMContentLoaded", function () {
+
     // 初始化UI
     ui.initialize();
 
