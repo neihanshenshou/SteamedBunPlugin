@@ -34,7 +34,7 @@ const ui = {
     updateStatus(isActive) {
         this.elements.toggleSwitch.checked = isActive;
         this.elements.statusMessage.textContent = isActive
-            ? "元素选择器已开启"
+            ? "元素选择器已开启(若元素未生成xpath,请重启或刷新页面)"
             : "元素选择器未开启";
 
         if (isActive) {

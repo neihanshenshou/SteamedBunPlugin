@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "SteamedBunXpath-SidePanel",
-  "version": "3.7.3",
+  "version": "3.7.4",
   "description": "插件固定于边侧栏, 选择页面元素并生成对应Xpath路径，Windows系统使用 Ctrl + 鼠标悬浮并点击生成，Mac系统使用 Shift + 鼠标悬浮并点击生成。 - 馒头 ",
   "action": {
     "default_icon": {
