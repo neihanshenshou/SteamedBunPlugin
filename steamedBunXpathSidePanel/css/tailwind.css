@@ -86,6 +86,10 @@ body {
     margin-right: 1rem;
 }
 
+.mr-5 {
+    margin-right: 1.3rem;
+}
+
 .space-y-1 > * + * {
     margin-top: 0.25rem;
 }
