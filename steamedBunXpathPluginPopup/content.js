@@ -123,7 +123,7 @@ function initializeExtension() {
             tooltipElement = document.createElement("div");
             tooltipElement.className = "xpath-finder-tooltip";
             tooltipElement.style.display = "none";
-            tooltipElement.style.backgroundColor = "#6c62fa";
+            tooltipElement.style.backgroundColor = "#f3813b";
             tooltipElement.style.color = "#ffffff";
             document.body.appendChild(tooltipElement);
         }
@@ -372,7 +372,7 @@ function deactivateElementSelection() {
 function handleMouseOver(event) {
     if (!isActive) return;
     // 根据操作系统选择触发按键
-    const modifierKeyPressed = (isMac && event.shiftKey) || (isWindows && event.ctrlKey);
+    const modifierKeyPressed = (isMac && event.metaKey) || (isWindows && event.ctrlKey);
     if (!modifierKeyPressed) return;
     // 更新高亮元素
     highlightedElement = event.target;
@@ -585,7 +585,7 @@ function handleElementClick(event) {
     if (!isActive) return;
     clearHighlightedElements();
     // 根据操作系统选择触发按键
-    const modifierKeyPressed = (isMac && event.shiftKey) || (isWindows && event.ctrlKey);
+    const modifierKeyPressed = (isMac && event.metaKey) || (isWindows && event.ctrlKey);
 
     if (modifierKeyPressed) {
         // 阻止元素的默认事件, 例如a标签、form提交操作等
@@ -635,12 +635,11 @@ function handleElementClick(event) {
             }
         );
     } catch (error) {
-        console.error("Xpath 生成器: Error sending message:", error);
+        console.debug("Xpath 生成器: Error sending message:", error);
     }
 
     return false;
 }
-
 
 // 优化XPath有效性验证和排序
 function generateXPaths(element) {
@@ -772,7 +771,6 @@ function isElementInIframe(element) {
     }
 }
 
-// 获取元素的iframe路径
 // 获取完整的iframe路径
 function getIframePath(element) {
     try {
@@ -1062,7 +1060,7 @@ function getXPathsWithAttributes(element) {
     return results;
 }
 
-// 基于文本
+// 获取元素文本
 function getDirectTextContent(element) {
     let text = "";
     let firstTextNodeIndex = Array.from(element.childNodes).findIndex(
@@ -1074,58 +1072,35 @@ function getDirectTextContent(element) {
     return text;
 }
 
-// 获取元素的完整文本内容，包括子元素文本
-function getFullTextContent(element) {
-    let text = "";
-
-    // 处理直接文本节点
-    const textNodes = Array.from(element.childNodes).filter(
-        node => node.nodeType === Node.TEXT_NODE
-    );
-
-    textNodes.forEach(node => {
-        text += node.textContent.trim() + " ";
-    });
-
-    // 递归处理子元素文本
-    const childElements = Array.from(element.children);
-    childElements.forEach(child => {
-        text += getFullTextContent(child).trim() + " ";
-    });
-
-    return text.trim();
-}
-
 // 基于文本
 function getXPathsWithText(element) {
     const results = [];
 
-    const fullText = getFullTextContent(element);
     const directText = getDirectTextContent(element);
 
 
-    if (fullText && fullText.length > 0) {
+    if (directText && directText.length > 0) {
         // 完整文本匹配（仅当文本较短时使用）
-        if (fullText.length < 50) {
-            const escapedText = escapeXPathString(fullText);
+        if (directText.length < 50) {
+            const escapedText = escapeXPathString(directText);
             results.push({
-                xpath: `//${element.tagName.toLowerCase()}[.="${escapedText}"]`,
+                xpath: `//${element.tagName.toLowerCase()}[text()="${escapedText}"]`,
                 description: "使用完整文本内容精准匹配",
             });
         }
 
         // 部分文本匹配
-        const firstWords = escapeXPathString(fullText.slice(0, 10));
-        if (fullText.length > 10) {
+        const firstWords = escapeXPathString(directText.slice(0, 20));
+        if (directText.length > 20) {
             results.push({
-                xpath: `//${element.tagName.toLowerCase()}[contains(., "${firstWords}")]`,
+                xpath: `//${element.tagName.toLowerCase()}[contains(text(), "${firstWords}")]`,
                 description: "使用部分文本内容模糊匹配",
             });
         }
     }
 
     // 直接文本匹配（仅当直接文本与完整文本不同时使用）
-    if (directText && directText.length > 0 && directText !== fullText) {
+    if (directText && directText.length > 0) {
         if (directText.length < 50) {
             const escapedText = escapeXPathString(directText);
             results.push({
