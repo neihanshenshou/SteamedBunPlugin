@@ -452,24 +452,26 @@ const communication = {
     },
 
     deactivateExtension() {
-        chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+        chrome.tabs.query({}, function (tabs) {
             if (tabs && tabs.length > 0) {
                 try {
-                    chrome.tabs.sendMessage(
-                        tabs[0].id,
-                        {action: "deactivate"},
-                        function (response) {
-                            if (chrome.runtime.lastError) {
-                                return;
+                    tabs.forEach(function (tab) {
+                        chrome.tabs.sendMessage(
+                            tab.id,
+                            {action: "deactivate"},
+                            function (response) {
+                                if (chrome.runtime.lastError) {
+                                    return;
+                                }
+
+                                ui.updateStatus(false);
+
+                                // 插件关闭时 清空xpath记录
+                                chrome.runtime.sendMessage({action: "clearXPaths"});
+                                communication.clearHighlightedElements();
                             }
-
-                            ui.updateStatus(false);
-
-                            // 插件关闭时 清空xpath记录
-                            chrome.runtime.sendMessage({action: "clearXPaths"});
-                            communication.clearHighlightedElements();
-                        }
-                    );
+                        );
+                    })
                 } catch (error) {
                     console.error("启停插件失败:", error);
                 }

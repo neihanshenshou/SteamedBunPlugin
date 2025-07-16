@@ -7,6 +7,14 @@
     <title>Xpath 生成器</title>
     <link rel="stylesheet" href="css/tailwind.css">
     <link rel="stylesheet" href="css/pop.css">
+    <style>
+        html, body {
+            width: 295px;
+            overflow-y: auto;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
 </head>
 
 <body class="bg-gray-100">
@@ -15,17 +23,10 @@
         <div>
             <span class="text-md font-semibold text-gray-700 open-side-panel-btn">操作菜单: </span>
             <button id="openSideButton" class="beautiful-reset">打开侧边栏</button>
-            <span id="open-side-btn-tip" class="text-gray-400 mr-5">ⓘ</span>
-            <button id="closePluginBtn" class="beautiful-reset">关闭插件</button>
-            <span id="close-btn-tip" class="text-gray-400 mr-4">ⓘ</span>
+            <span id="open-side-btn-tip" class="text-gray-400">ⓘ</span>
             <div id="open-side-btn-tip-msg" class="mt-4 mb-2 text-sm font-medium text-red-500 hidden">
                 开启后浏览器右侧边栏渲染插件, 固定至浏览器 刷新页面不会自动关闭~
             </div>
-
-            <div id="close-btn-tip-msg" class="mt-4 mb-2 text-sm font-medium text-red-500 hidden">
-                关闭功能基本正常, 暂不能实时刷新侧边栏的插件状态~
-            </div>
-
         </div>
     </div>
 </div>
